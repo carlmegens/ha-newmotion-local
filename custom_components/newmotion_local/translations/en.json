@@ -92,6 +92,35 @@
       "energy_total": {
         "name": "Total energy"
       },
+      "last_session": {
+        "name": "Last session",
+        "state_attributes": {
+          "session_id": {
+            "name": "Session ID"
+          },
+          "start": {
+            "name": "Start"
+          },
+          "stop": {
+            "name": "Stop"
+          },
+          "duration_minutes": {
+            "name": "Duration (minutes)"
+          },
+          "energy_kwh": {
+            "name": "Energy (kWh)"
+          },
+          "meter_start_kwh": {
+            "name": "Meter at start"
+          },
+          "meter_stop_kwh": {
+            "name": "Meter at stop"
+          },
+          "token_suffix": {
+            "name": "Card"
+          }
+        }
+      },
       "current_limit": {
         "name": "Current limit"
       },

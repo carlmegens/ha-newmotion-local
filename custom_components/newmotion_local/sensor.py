@@ -119,6 +119,15 @@ SENSORS: tuple[NewMotionSensorDescription, ...] = (
         value_fn=lambda d: d.meter_total_kwh,
     ),
     NewMotionSensorDescription(
+        key="last_session",
+        translation_key="last_session",
+        device_class=SensorDeviceClass.ENERGY,
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        suggested_display_precision=2,
+        value_fn=lambda d: d.last_session.energy_kwh if d.last_session else None,
+        attrs_fn=lambda d: d.last_session.as_event_data() if d.last_session else {},
+    ),
+    NewMotionSensorDescription(
         key="current_limit",
         translation_key="current_limit",
         device_class=SensorDeviceClass.CURRENT,

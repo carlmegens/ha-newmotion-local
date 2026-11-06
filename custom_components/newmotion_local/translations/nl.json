@@ -92,6 +92,35 @@
       "energy_total": {
         "name": "Totale energie"
       },
+      "last_session": {
+        "name": "Laatste sessie",
+        "state_attributes": {
+          "session_id": {
+            "name": "Sessie-ID"
+          },
+          "start": {
+            "name": "Start"
+          },
+          "stop": {
+            "name": "Einde"
+          },
+          "duration_minutes": {
+            "name": "Duur (minuten)"
+          },
+          "energy_kwh": {
+            "name": "Energie (kWh)"
+          },
+          "meter_start_kwh": {
+            "name": "Meterstand begin"
+          },
+          "meter_stop_kwh": {
+            "name": "Meterstand einde"
+          },
+          "token_suffix": {
+            "name": "Laadpas"
+          }
+        }
+      },
       "current_limit": {
         "name": "Stroomlimiet"
       },

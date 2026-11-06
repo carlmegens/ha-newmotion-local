@@ -84,7 +84,9 @@ def status_payload(state: str, consumed: int = 2270) -> dict[str, Any]:
     }
 
 
-def transactions_payload(open_session: bool) -> dict[str, Any]:
+def transactions_payload(
+    open_session: bool, extra: list[dict[str, Any]] | None = None
+) -> dict[str, Any]:
     """Return a /user/transactions body."""
     finished = [
         {
@@ -114,6 +116,7 @@ def transactions_payload(open_session: bool) -> dict[str, Any]:
             "connector": 1,
         },
     ]
+    finished.extend(extra or [])
     if open_session:
         finished.append(
             {
@@ -135,7 +138,27 @@ class MockNewMotion:
         """Start in the given state."""
         self.state = state
         self.consumed = 2270
+        self.extra_sessions: list[dict[str, Any]] = []
         self.requests: list[tuple[str, str]] = []
+
+    def finish_session(self) -> None:
+        """End the open session: the car is unplugged."""
+        self.extra_sessions.append(
+            {
+                "chargepointIdentity": CPID,
+                "privateID": 11905,
+                "id": 1503500000,
+                "token": {"tokenCode": "04AABBCCDDEEFF"},
+                "startDate": 1793990703000,
+                "stopDate": 1794020000000,
+                "status": "FINISHED",
+                "meterStart": METER_BEFORE,
+                "meterStop": METER_BEFORE + self.consumed,
+                "currentEnergyAmount": self.consumed,
+                "connector": 1,
+            }
+        )
+        self.state = "available"
 
     def app(self) -> web.Application:
         """Return the aiohttp application."""
@@ -156,7 +179,9 @@ class MockNewMotion:
         self.requests.append((request.method, request.path))
         if request.method != "GET":
             return web.Response(status=405)
-        return web.json_response(transactions_payload(self.state != "available"))
+        return web.json_response(
+            transactions_payload(self.state != "available", self.extra_sessions)
+        )
 
 
 def main() -> None:

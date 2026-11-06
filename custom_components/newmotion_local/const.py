@@ -19,6 +19,11 @@ TRANSACTIONS_INTERVAL: Final = timedelta(minutes=15)
 
 REQUEST_TIMEOUT: Final = 10
 
+# Fired on the bus for every charging session that finished.
+EVENT_SESSION_FINISHED: Final = f"{DOMAIN}_session_finished"
+# How many announced session ids to remember (the charger keeps about 20).
+SEEN_SESSIONS_KEPT: Final = 200
+
 # Charger status as exposed by the status sensor.
 STATUS_AVAILABLE: Final = "available"
 STATUS_CONNECTED: Final = "connected"

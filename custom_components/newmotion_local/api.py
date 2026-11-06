@@ -201,6 +201,77 @@ def parse_status(raw: dict[str, Any]) -> ChargerState:
     )
 
 
+@dataclass(frozen=True, slots=True)
+class FinishedSession:
+    """A completed charging session from ``/user/transactions``.
+
+    ``session_id`` is the id the back office uses: it is the "ID" column on the
+    reimbursement statements of the charging operator.
+    """
+
+    session_id: str
+    private_id: int | None
+    start: datetime
+    stop: datetime
+    energy_kwh: float
+    meter_start_kwh: float
+    meter_stop_kwh: float
+    token_suffix: str | None
+
+    @property
+    def duration_minutes(self) -> int:
+        """Return how long the car was plugged in."""
+        return round((self.stop - self.start).total_seconds() / 60)
+
+    def as_event_data(self) -> dict[str, Any]:
+        """Return a JSON-friendly dict for events and attributes."""
+        return {
+            "session_id": self.session_id,
+            "start": self.start.isoformat(),
+            "stop": self.stop.isoformat(),
+            "duration_minutes": self.duration_minutes,
+            "energy_kwh": self.energy_kwh,
+            "meter_start_kwh": self.meter_start_kwh,
+            "meter_stop_kwh": self.meter_stop_kwh,
+            "token_suffix": self.token_suffix,
+        }
+
+
+def finished_sessions(transactions: list[dict[str, Any]]) -> list[FinishedSession]:
+    """Return the finished sessions in a transaction list, oldest first."""
+    sessions: list[FinishedSession] = []
+    for tx in transactions:
+        start = _ms_to_datetime(tx.get("startDate"))
+        stop = _ms_to_datetime(tx.get("stopDate"))
+        meter_start = tx.get("meterStart")
+        meter_stop = tx.get("meterStop")
+        session_id = tx.get("id")
+        if (
+            start is None
+            or stop is None
+            or session_id is None
+            or not isinstance(meter_start, int | float)
+            or not isinstance(meter_stop, int | float)
+        ):
+            continue
+        token = tx.get("token")
+        code = token.get("tokenCode") if isinstance(token, dict) else None
+        sessions.append(
+            FinishedSession(
+                session_id=str(session_id),
+                private_id=tx.get("privateID"),
+                start=start,
+                stop=stop,
+                energy_kwh=round((meter_stop - meter_start) / 1000, 3),
+                meter_start_kwh=round(meter_start / 1000, 3),
+                meter_stop_kwh=round(meter_stop / 1000, 3),
+                token_suffix=str(code)[-4:] if code else None,
+            )
+        )
+    sessions.sort(key=lambda s: s.stop)
+    return sessions
+
+
 def meter_total_kwh(
     state: ChargerState, transactions: list[dict[str, Any]]
 ) -> float | None:

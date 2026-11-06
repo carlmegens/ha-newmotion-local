@@ -77,3 +77,17 @@ def test_meter_total_unknown_when_session_missing_from_list() -> None:
     state = parse_status(status_payload("charging"))
     txs = transactions_payload(open_session=False)["value"]
     assert meter_total_kwh(state, txs) is None
+
+
+def test_finished_sessions() -> None:
+    from custom_components.newmotion_local.api import finished_sessions
+
+    sessions = finished_sessions(transactions_payload(open_session=True)["value"])
+    # The open session (no stop/meterStop) is not a finished session.
+    assert [s.session_id for s in sessions] == ["1503371130", "1503410528"]
+    first = sessions[0]
+    assert first.energy_kwh == 13.48
+    assert first.meter_stop_kwh == 34683.35
+    assert first.token_suffix == "EEFF"
+    assert first.duration_minutes == 231
+    assert first.as_event_data()["session_id"] == "1503371130"

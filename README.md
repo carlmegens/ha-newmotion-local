@@ -25,6 +25,7 @@ things like reimbursement of home charging costs keep working.
 | Session energy | kWh charged in the current session |
 | Session start | When the current session started |
 | Total energy | Lifetime meter reading of the charger; usable in the Energy dashboard |
+| Last session | kWh of the most recent finished session; start, stop, duration, meter readings and session ID as attributes |
 | Current limit | Current the charger offers right now (A per phase) |
 | Maximum current | Configured maximum (diagnostic) |
 | Power factor | Disabled by default |
@@ -50,6 +51,30 @@ Tested with a Home Advanced on firmware 1.13.1.3.
 2. Install **NewMotion Local** and restart Home Assistant.
 3. Go to **Settings → Devices & services → Add integration → NewMotion Local**
    and enter the charger's IP address. Give it a fixed address in your router.
+
+## Session log
+
+Every finished charging session fires a `newmotion_local_session_finished`
+event:
+
+```yaml
+session_id: "1500000001"     # same ID as on the operator's statements
+start: "2026-10-28T12:58:00+00:00"
+stop: "2026-10-29T07:53:00+00:00"
+duration_minutes: 1135
+energy_kwh: 36.72
+meter_start_kwh: 12500.33
+meter_stop_kwh: 12537.05
+token_suffix: "ABCD"          # last 4 characters of the charge card
+device_id: ...
+config_entry_id: ...
+```
+
+Sessions that end while Home Assistant is offline are announced after it
+starts again (as long as the charger still lists them; it keeps about 20).
+A typical use is an automation that writes each session to a local calendar,
+so you can check the monthly reimbursement statement of your employer's
+charging provider line by line.
 
 ## Use with evcc
 
