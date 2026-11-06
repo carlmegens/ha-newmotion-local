@@ -1,0 +1,103 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "NewMotion charger",
+        "description": "Enter the local address of a NewMotion / Shell Recharge charger. Home Assistant only reads its status; nothing on the charger is changed.",
+        "data": {
+          "host": "Host"
+        },
+        "data_description": {
+          "host": "IP address of the charger, for example 192.168.1.50. Port 12800 is used unless you add another one (host:port)."
+        }
+      },
+      "reconfigure": {
+        "title": "Change address",
+        "data": {
+          "host": "Host"
+        },
+        "data_description": {
+          "host": "New IP address of the charger."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the charger on port 12800.",
+      "not_newmotion": "This address does not answer like a NewMotion charger.",
+      "unknown": "Unexpected error, see the logs."
+    },
+    "abort": {
+      "already_configured": "This charger is already configured.",
+      "reconfigure_successful": "Address updated.",
+      "unique_id_mismatch": "That address belongs to a different charger."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "car_connected": {
+        "name": "Car connected"
+      },
+      "charging": {
+        "name": "Charging"
+      },
+      "backend_connected": {
+        "name": "Back office"
+      },
+      "problem": {
+        "name": "Problem"
+      }
+    },
+    "sensor": {
+      "status": {
+        "name": "Status",
+        "state": {
+          "available": "Available",
+          "connected": "Car connected",
+          "charging": "Charging",
+          "error": "Error"
+        },
+        "state_attributes": {
+          "car_status": {
+            "name": "Car status"
+          },
+          "transaction_status": {
+            "name": "Session status"
+          },
+          "errors": {
+            "name": "Errors"
+          },
+          "warnings": {
+            "name": "Warnings"
+          }
+        }
+      },
+      "charging_power": {
+        "name": "Charging power"
+      },
+      "charging_current": {
+        "name": "Charging current"
+      },
+      "active_phases": {
+        "name": "Active phases"
+      },
+      "power_factor": {
+        "name": "Power factor"
+      },
+      "session_energy": {
+        "name": "Session energy"
+      },
+      "session_start": {
+        "name": "Session start"
+      },
+      "energy_total": {
+        "name": "Total energy"
+      },
+      "current_limit": {
+        "name": "Current limit"
+      },
+      "max_current": {
+        "name": "Maximum current"
+      }
+    }
+  }
+}

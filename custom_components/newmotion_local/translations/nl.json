@@ -1,0 +1,103 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "NewMotion-laadpaal",
+        "description": "Vul het lokale adres in van een NewMotion / Shell Recharge-laadpaal. Home Assistant leest alleen de status uit; er verandert niets aan de laadpaal.",
+        "data": {
+          "host": "Host"
+        },
+        "data_description": {
+          "host": "IP-adres van de laadpaal, bijvoorbeeld 192.168.1.50. Poort 12800 wordt gebruikt, tenzij je een andere opgeeft (host:poort)."
+        }
+      },
+      "reconfigure": {
+        "title": "Adres wijzigen",
+        "data": {
+          "host": "Host"
+        },
+        "data_description": {
+          "host": "Nieuw IP-adres van de laadpaal."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Kan de laadpaal niet bereiken op poort 12800.",
+      "not_newmotion": "Dit adres antwoordt niet als een NewMotion-laadpaal.",
+      "unknown": "Onverwachte fout, zie de logs."
+    },
+    "abort": {
+      "already_configured": "Deze laadpaal is al toegevoegd.",
+      "reconfigure_successful": "Adres bijgewerkt.",
+      "unique_id_mismatch": "Dat adres hoort bij een andere laadpaal."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "car_connected": {
+        "name": "Auto aangesloten"
+      },
+      "charging": {
+        "name": "Laden"
+      },
+      "backend_connected": {
+        "name": "Backoffice"
+      },
+      "problem": {
+        "name": "Probleem"
+      }
+    },
+    "sensor": {
+      "status": {
+        "name": "Status",
+        "state": {
+          "available": "Beschikbaar",
+          "connected": "Auto aangesloten",
+          "charging": "Laden",
+          "error": "Storing"
+        },
+        "state_attributes": {
+          "car_status": {
+            "name": "Status auto"
+          },
+          "transaction_status": {
+            "name": "Status sessie"
+          },
+          "errors": {
+            "name": "Fouten"
+          },
+          "warnings": {
+            "name": "Waarschuwingen"
+          }
+        }
+      },
+      "charging_power": {
+        "name": "Laadvermogen"
+      },
+      "charging_current": {
+        "name": "Laadstroom"
+      },
+      "active_phases": {
+        "name": "Actieve fasen"
+      },
+      "power_factor": {
+        "name": "Arbeidsfactor"
+      },
+      "session_energy": {
+        "name": "Energie deze sessie"
+      },
+      "session_start": {
+        "name": "Start sessie"
+      },
+      "energy_total": {
+        "name": "Totale energie"
+      },
+      "current_limit": {
+        "name": "Stroomlimiet"
+      },
+      "max_current": {
+        "name": "Maximale stroom"
+      }
+    }
+  }
+}
